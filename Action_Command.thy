@@ -32,7 +32,7 @@ fun define_action t actT ctx =
       val actfix = check_term ctx (lfp $ absfree (n, typ) actlam)
       val acteq = mk_equals (Free (n, typ), actfix)
   in
-    snd (Specification.definition (SOME (Binding.name n, NONE, NoSyn)) [] [] ((Binding.name (n ^ "_def"), @{attributes [action_defs]}), acteq) ctx) 
+    snd (Specification.definition {verbose = true} (SOME (Binding.name n, NONE, NoSyn)) [] [] ((Binding.name (n ^ "_def"), @{attributes [action_defs]}), acteq) ctx)
   end;
 
 fun tuple_proj n i t =
@@ -51,7 +51,7 @@ fun define_actions ((actsn, raw_actT), ts) ctx =
       val ps = mk_tuple (map (Free o fst) eqs)
       val actfix = check_term ctx (lfp $ tupled_lambda ps acts)
       val acteq = mk_equals (Free (actsn, dummyT), actfix)
-      fun def ctx (n, eq) = definition (SOME (Binding.name n, NONE, NoSyn)) [] [] ((Binding.name (n ^ "_def"), @{attributes [action_defs]}), eq) ctx 
+      fun def ctx (n, eq) = definition {verbose = true} (SOME (Binding.name n, NONE, NoSyn)) [] [] ((Binding.name (n ^ "_def"), @{attributes [action_defs]}), eq) ctx
       val ((sys, _), ctx0) = def ctx (actsn, acteq)
       val actnms = map (fn (n, i) => (n, mk_equals (Free (n, dummyT), tuple_proj (length eqs) i sys))) (ListPair.zip (map (fst o fst) eqs, 0 upto (length eqs - 1)))
       val ctx1 = fold (fn eq => fn ctx' => snd (def ctx' eq)) actnms ctx0   

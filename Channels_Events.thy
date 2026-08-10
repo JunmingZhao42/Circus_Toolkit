@@ -15,8 +15,8 @@ definition evparam :: "('a \<Longrightarrow>\<^sub>\<triangle> 'e) \<Rightarrow>
 nonterminal evt
 
 syntax 
-  "_evt_id"    :: "id \<Rightarrow> evt" ("_")
-  "_evt_param" :: "id \<Rightarrow> logic \<Rightarrow> evt" ("_/ _")
+  "_evt_id"    :: "id_position \<Rightarrow> evt" ("_")
+  "_evt_param" :: "id_position \<Rightarrow> logic \<Rightarrow> evt" ("_/ _")
 
 translations 
   "_evt_id x" == "CONST evsimple x"
@@ -85,13 +85,13 @@ definition csempty ("\<lbrace>\<rbrace>") where [code_unfold]: "\<lbrace>\<rbrac
 nonterminal chan and chans
 
 syntax 
-  "_chan_id"       :: "id \<Rightarrow> chan" ("_")
+  "_chan_id"       :: "id_position \<Rightarrow> chan" ("_")
   "_chan_inst"     :: "chan \<Rightarrow> logic \<Rightarrow> chan" ("_\<^bold>._" [100,101] 101)
   "_chan"          :: "chan \<Rightarrow> chans" ("_")
   "_chans"         :: "chan \<Rightarrow> chans \<Rightarrow> chans" ("_,/ _")
   "_ch_enum"       :: "chans \<Rightarrow> logic" ("\<lbrace>_\<rbrace>")
-  "_ch_collect"    :: "id \<Rightarrow> pttrn \<Rightarrow> logic \<Rightarrow> logic \<Rightarrow> logic" ("\<lbrace>_/\<^bold>._ \<in> _./ _\<rbrace>")
-  "_ch_collect_ns" :: "id \<Rightarrow> pttrn \<Rightarrow> logic \<Rightarrow> logic" ("\<lbrace>_/\<^bold>._./ _\<rbrace>")
+  "_ch_collect"    :: "id_position \<Rightarrow> pttrn \<Rightarrow> logic \<Rightarrow> logic \<Rightarrow> logic" ("\<lbrace>_/\<^bold>._ \<in> _./ _\<rbrace>")
+  "_ch_collect_ns" :: "id_position \<Rightarrow> pttrn \<Rightarrow> logic \<Rightarrow> logic" ("\<lbrace>_/\<^bold>._./ _\<rbrace>")
 
 translations
   "_chan_id c" => "c"
@@ -105,6 +105,11 @@ translations
   "_ch_enum (_chans c cs)" <= "CONST csinsert c (_ch_enum cs)"
   "_ch_collect e x A P" == "CONST cscollect e A (\<lambda> x. P)"
   "_ch_collect_ns e x P" == "_ch_collect e x (CONST UNIV) P"
+
+syntax_consts
+  "_ch_enum"       \<rightleftharpoons> csinsert and
+  "_ch_collect"    \<rightleftharpoons> cscollect and
+  "_ch_collect_ns" \<rightleftharpoons> cscollect
 
 subsection \<open> Renaming Relations \<close>
 

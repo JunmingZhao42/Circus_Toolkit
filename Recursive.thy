@@ -88,7 +88,7 @@ fun define_recursive (raw_rec_decls, raw_rec_eqs) ctx =
       val recs = mk_tuple (map snd rec_funs)
       val ps = mk_tuple (map (Free o fst) rec_funs)
       val rec_fun = tupled_lambda ps recs
-      fun def ctx (n, eq) atts = definition (SOME (Binding.name n, NONE, NoSyn)) [] [] ((Binding.name (n ^ "_def"), atts), eq) ctx
+      fun def ctx (n, eq) atts = definition {verbose = false} (SOME (Binding.name n, NONE, NoSyn)) [] [] ((Binding.name (n ^ "_def"), atts), eq) ctx
       val ((recfun_term, _), ctx0) = def ctx' (recfunn, Syntax.check_term ctx' (mk_equals (Free (recfunn, dummyT), rec_fun))) @{attributes [rec_sys_defs]}
       val rec_nms = map (fn (n, i) => (n, mk_equals (Free (n, dummyT), tuple_proj (length rec_funs) i (check_term ctx0 (lfp $ recfun_term))))) (ListPair.zip (map (fst o fst) rec_funs, 0 upto (length rec_funs - 1)))
       val monothm = mono_proof recfun_term ctx0
